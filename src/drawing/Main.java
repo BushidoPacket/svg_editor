@@ -15,7 +15,4 @@ public class Main
         });
     }
 
-    public static void console(String input){
-        System.out.println(input);
-    }
 }
