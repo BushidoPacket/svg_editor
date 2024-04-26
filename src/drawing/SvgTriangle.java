@@ -13,8 +13,6 @@ public class SvgTriangle {
     @XmlAttribute
     private String fill;
 
-    // getters and setters
-
     public void setPoints(String points) {
         this.points = points;
     }

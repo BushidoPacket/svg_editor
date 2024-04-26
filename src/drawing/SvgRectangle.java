@@ -22,7 +22,6 @@ public class SvgRectangle {
     @XmlAttribute
     private String fill;
 
-    // getters
 
     public void setX(int x) {
         this.x = x;

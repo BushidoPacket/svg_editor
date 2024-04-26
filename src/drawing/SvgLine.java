@@ -19,8 +19,6 @@ public class SvgLine {
     @XmlAttribute
     private String stroke;
 
-    // getters and setters
-
     public void setX1(int x1) {
         this.x1 = x1;
     }

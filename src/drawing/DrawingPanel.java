@@ -252,7 +252,6 @@ public class DrawingPanel extends JPanel {
             System.out.println("Error loading SVG: " + e);
         }
 
-        // Redraw the panel
         repaint();
     }
 
