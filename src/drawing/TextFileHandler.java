@@ -31,7 +31,7 @@ public class TextFileHandler {
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             String content = loadTextFile(selectedFile.getPath());
-            SvgOutput.setText(content);
+            SvgOutput.setFileText(content);
             drawingPanel.loadFromSvg(content);
         }
     }

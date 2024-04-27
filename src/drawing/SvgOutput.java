@@ -79,6 +79,21 @@ public class SvgOutput extends JFrame {
         }
     }
 
+    public static void setFileText(String text) {
+        original = initialText;
+        original = original.replace("</svg>", "");
+        text = text.replace("<svg>", "");
+        text = text.replace("</svg>", "");
+        text = text.replace("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>", "");
+        text = text.trim();
+        output = original + "\t" + text + "\n" + "</svg>";
+        try {
+            textArea.setText(original + "\t" + text + "\n" + "</svg>");
+        } catch(NullPointerException e) {
+            // Do nothing
+        }
+    }
+
     public static String getOutput() {
         return output;
     }
