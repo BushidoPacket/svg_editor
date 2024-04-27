@@ -1,4 +1,6 @@
-package drawing;
+package drawing.shapes;
+
+import drawing.Shape;
 
 import java.awt.*;
 
@@ -6,7 +8,7 @@ public class FreeDraw implements Shape {
     private java.util.List<Point> points;
     private Color color;
 
-    private int radius = 10;
+    private static int radius = 5;
 
     public FreeDraw(Color color) {
         this.color = color;
@@ -20,9 +22,16 @@ public class FreeDraw implements Shape {
     @Override
     public void draw(Graphics2D g2d) {
         g2d.setColor(color);
+        g2d.setStroke(new BasicStroke(radius));
+        Point lastPoint = null;
         for (Point point : points) {
             g2d.fillOval(point.x, point.y, radius, radius);
+            if (lastPoint != null) {
+                g2d.drawLine(lastPoint.x + radius / 2, lastPoint.y + radius / 2, point.x + radius / 2, point.y + radius / 2);
+            }
+            lastPoint = point;
         }
+        g2d.setStroke(new BasicStroke(1));
     }
 
     @Override
@@ -42,6 +51,10 @@ public class FreeDraw implements Shape {
 
     @Override
     public int getRadius() {
+        return radius;
+    }
+
+    public static int getRd() {
         return radius;
     }
 

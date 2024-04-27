@@ -1,5 +1,7 @@
 // Svg.java
 package drawing;
+import drawing.svgshapes.*;
+
 import javax.xml.bind.annotation.*;
 
 @XmlRootElement(name = "svg")

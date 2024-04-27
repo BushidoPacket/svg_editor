@@ -1,6 +1,8 @@
 // DrawingPanel.java
 package drawing;
 
+import drawing.shapes.*;
+import drawing.shapes.Rectangle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -55,7 +57,7 @@ public class DrawingPanel extends JPanel {
                     shapes.add(new FreeDraw(currentColor));
                 }
                 if (shapeType.equals("Rectangle")) {
-                    shapes.add(new Rectangle(e.getX(), e.getY(), e.getX(), e.getY(), currentColor, isFilled));
+                    shapes.add(new drawing.shapes.Rectangle(e.getX(), e.getY(), e.getX(), e.getY(), currentColor, isFilled));
                     shapesTablePanel.addShape(shapeIndex++,"Rectangle", "x: " + e.getX() + ", y: " + e.getY(), colorHex);
                 }
                 if (shapeType.equals("Circle")) {
@@ -95,8 +97,8 @@ public class DrawingPanel extends JPanel {
                 }
                 if (shapeType.equals("Rectangle")) {
                     shapes.get(shapes.size() - 1).setEnd(e.getX(), e.getY());
-                    if (shapes.get(shapes.size() - 1) instanceof Rectangle) {
-                        Rectangle lastRectangle = (Rectangle) shapes.get(shapes.size() - 1);
+                    if (shapes.get(shapes.size() - 1) instanceof drawing.shapes.Rectangle) {
+                        drawing.shapes.Rectangle lastRectangle = (drawing.shapes.Rectangle) shapes.get(shapes.size() - 1);
                         int width = lastRectangle.getEndX() - lastRectangle.getStartX();
                         int height = lastRectangle.getEndY() - lastRectangle.getStartY();
                         shapesTablePanel.updateShape(lastIndex, "Rectangle", "x: " + lastRectangle.getStartX() + ", y: " + lastRectangle.getStartY() + ", width: " + width + ", height: " + height, colorHex);                    }
@@ -152,8 +154,8 @@ public class DrawingPanel extends JPanel {
                     }
                 }
                 if (shapeType.equals("Rectangle")) {
-                    if (shapes.get(shapes.size() - 1) instanceof Rectangle) {
-                        Rectangle lastRectangle = (Rectangle) shapes.get(shapes.size() - 1);
+                    if (shapes.get(shapes.size() - 1) instanceof drawing.shapes.Rectangle) {
+                        drawing.shapes.Rectangle lastRectangle = (drawing.shapes.Rectangle) shapes.get(shapes.size() - 1);
                         int width = lastRectangle.getEndX() - lastRectangle.getStartX();
                         int height = lastRectangle.getEndY() - lastRectangle.getStartY();
                         shapesTablePanel.updateShape(lastIndex, "Rectangle", "x: " + lastRectangle.getStartX() + ", y: " + lastRectangle.getStartY() + ", width: " + width + ", height: " + height, colorHex);                    }
@@ -203,6 +205,7 @@ public class DrawingPanel extends JPanel {
             builder = factory.newDocumentBuilder();
             Document doc = builder.parse(new InputSource(new StringReader(svgCode)));
             NodeList elements = doc.getElementsByTagName("*");
+            FreeDraw freeDraw = null;
             for (int i = 0; i < elements.getLength(); i++) {
                 Element element = (Element) elements.item(i);
                 String tagName = element.getTagName();
@@ -252,7 +255,40 @@ public class DrawingPanel extends JPanel {
                         shapes.add(new Ellipse(ellipseCenterX, ellipseCenterY, radiusX, radiusY, ellipseColor, ellipseIsFilled));
                         shapesTablePanel.addShape(shapeIndex++,"Ellipse", "centerX: " + ellipseCenterX + ", centerY: " + ellipseCenterY + ", radX: " + radiusX + ", radY: " + radiusY, "#" + Integer.toHexString(ellipseColor.getRGB()).substring(2));
                         break;
+                    case "line":
+                        int startX = Integer.parseInt(element.getAttribute("x1"));
+                        int startY = Integer.parseInt(element.getAttribute("y1"));
+                        int endX = Integer.parseInt(element.getAttribute("x2"));
+                        int endY = Integer.parseInt(element.getAttribute("y2"));
+                        Color lineColor = Color.decode(element.getAttribute("stroke"));
+                        shapes.add(new Line(startX, startY, endX, endY, lineColor));
+                        shapesTablePanel.addShape(shapeIndex++,"Line", "startX: " + startX + ", startY: " + startY + ", endX: " + endX + ", endY: " + endY, "#" + Integer.toHexString(lineColor.getRGB()).substring(2));
+                        break;
+                    case "path":
+                        int centerX0 = Integer.parseInt(element.getAttribute("cx"));
+                        int centerY0 = Integer.parseInt(element.getAttribute("cy"));
+                        int radius0 = Integer.parseInt(element.getAttribute("r"));
+                        if (radius0 == FreeDraw.getRd()/2) { // Adjust this value to match the radius of your FreeDraw circles
+                            if (freeDraw == null) {
+                                Color circleColor0 = Color.decode(element.getAttribute("stroke"));
+                                freeDraw = new FreeDraw(circleColor0);
+                            }
+                            freeDraw.addPoint(centerX0, centerY0);
+                        } else {
+                            if (freeDraw != null) {
+                                shapes.add(freeDraw);
+                                freeDraw = null;
+                            }
+                            Color circleColor0 = Color.decode(element.getAttribute("stroke"));
+                            boolean circleIsFilled0 = !element.getAttribute("fill").equals("none");
+                            shapes.add(new Circle(centerX0, centerY0, radius0, circleColor0, circleIsFilled0));
+                            shapesTablePanel.addShape(shapeIndex++, "Circle", "centerX: " + centerX0 + ", centerY: " + centerY0 + ", rad: " + radius0, "#" + Integer.toHexString(circleColor0.getRGB()).substring(2));
+                            break;
+                        }
                 }
+            }
+            if (freeDraw != null) {
+                shapes.add(freeDraw);
             }
         } catch (Exception e) {
             System.out.println("Error loading SVG: " + e);

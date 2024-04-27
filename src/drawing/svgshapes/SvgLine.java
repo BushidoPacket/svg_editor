@@ -1,4 +1,4 @@
-package drawing;
+package drawing.svgshapes;
 
 import javax.xml.bind.annotation.*;
 

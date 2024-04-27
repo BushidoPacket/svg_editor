@@ -1,5 +1,5 @@
 // SvgCircle.java
-package drawing;
+package drawing.svgshapes;
 import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)

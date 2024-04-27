@@ -1,10 +1,12 @@
-package drawing;
+package drawing.svgshapes;
+
+import drawing.svgshapes.SvgCircle;
 
 import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SvgFreeDraw {
-    @XmlElement(name = "circle")
+    @XmlElement(name = "path")
     private SvgCircle[] circles;
 
     // getters and setters

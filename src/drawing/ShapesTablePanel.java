@@ -1,5 +1,7 @@
 package drawing;
 
+import drawing.shapes.FreeDraw;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -42,7 +44,11 @@ public class ShapesTablePanel extends JPanel {
     }
 
     public void addShape(int index, String shapeType, String values, String color) {
-        tableModel.addRow(new Object[]{index, shapeType, values, color});
+        //System.out.println(values);
+        if (!values.contains("rad: " + FreeDraw.getRd()/2)) {
+            tableModel.addRow(new Object[]{index, shapeType, values, color});
+        }
+
     }
 
     public void updateShape(int index, String shapeType, String values, String color) {

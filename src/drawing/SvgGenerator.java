@@ -1,5 +1,9 @@
 package drawing;
 
+import drawing.shapes.*;
+import drawing.shapes.Rectangle;
+import drawing.svgshapes.*;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import java.awt.*;
@@ -82,6 +86,7 @@ public class SvgGenerator {
                             svgCircle.setR(freeDraw.getRadius()/2);
                             svgCircle.setStroke(colorHex);
                             svgCircle.setFill(colorHex);
+                            svgCircle.setDataIndex(-1);
                             svgCircles.add(svgCircle);
                         }
                         SvgFreeDraw svgFreeDraw = new SvgFreeDraw();

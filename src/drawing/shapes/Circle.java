@@ -1,4 +1,6 @@
-package drawing;
+package drawing.shapes;
+
+import drawing.Shape;
 
 import java.awt.*;
 

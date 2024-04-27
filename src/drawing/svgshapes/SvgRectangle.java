@@ -1,47 +1,46 @@
-// SvgEllipse.java
-package drawing;
+// SvgRectangle.java
+package drawing.svgshapes;
 import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SvgEllipse {
+public class SvgRectangle {
     @XmlAttribute
-    private int cx;
+    private int x;
 
     @XmlAttribute
-    private int cy;
+    private int y;
 
     @XmlAttribute
-    private int rx;
+    private int width;
 
     @XmlAttribute
-    private int ry;
+    private int height;
 
     @XmlAttribute
     private String stroke;
 
     @XmlAttribute
     private String fill;
+
     @XmlAttribute(name = "data-index")
     private int dataIndex;
 
-    // getters
 
-    public void setCx(int cx) {
-        this.cx = cx;
+    public void setX(int x) {
+        this.x = x;
     }
 
-    public void setCy(int cy) {
-        this.cy = cy;
+    public void setY(int y) {
+        this.y = y;
     }
 
-    public void setRx(int rx) {
-        this.rx = rx;
+    public void setWidth(int width) {
+        this.width = width;
     }
 
-    public void setRy(int ry) {
-        this.ry = ry;
+    public void setHeight(int height) {
+        this.height = height;
     }
-
     public void setStroke(String stroke) {
         this.stroke = stroke;
     }

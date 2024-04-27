@@ -140,7 +140,7 @@ public class SvgOutput extends JFrame {
         String[] words = inputSvg.split(" ");
         String shapeType = words[0].replace("<", "");
         String[] values = newValues.split(", ");
-        //System.out.println(shapeType);
+        System.out.println(shapeType);
 
         switch(shapeType){
             case "circle":

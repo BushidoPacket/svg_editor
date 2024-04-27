@@ -1,20 +1,11 @@
-// SvgRectangle.java
-package drawing;
+// SvgTriangle.java
+package drawing.svgshapes;
 import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SvgRectangle {
+public class SvgTriangle {
     @XmlAttribute
-    private int x;
-
-    @XmlAttribute
-    private int y;
-
-    @XmlAttribute
-    private int width;
-
-    @XmlAttribute
-    private int height;
+    private String points;
 
     @XmlAttribute
     private String stroke;
@@ -25,22 +16,10 @@ public class SvgRectangle {
     @XmlAttribute(name = "data-index")
     private int dataIndex;
 
-
-    public void setX(int x) {
-        this.x = x;
+    public void setPoints(String points) {
+        this.points = points;
     }
 
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
     public void setStroke(String stroke) {
         this.stroke = stroke;
     }
@@ -48,6 +27,7 @@ public class SvgRectangle {
     public void setFill(String fill) {
         this.fill = fill;
     }
+
     public void setDataIndex(int dataIndex) {
         this.dataIndex = dataIndex;
     }
