@@ -72,4 +72,8 @@ public class Circle implements Shape {
     public int[] getYPoints() {
         throw new UnsupportedOperationException("getYPoints operation is not supported by Circle");
     }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
 }

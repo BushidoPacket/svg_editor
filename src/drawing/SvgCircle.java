@@ -19,6 +19,9 @@ public class SvgCircle {
     @XmlAttribute
     private String fill;
 
+    @XmlAttribute(name = "data-index")
+    private int dataIndex;
+
     // getters and setters
 
     public void setCx(int cx) {
@@ -39,5 +42,8 @@ public class SvgCircle {
 
     public void setFill(String fill) {
         this.fill = fill;
+    }
+    public void setDataIndex(int dataIndex) {
+        this.dataIndex = dataIndex;
     }
 }

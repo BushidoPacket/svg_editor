@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static drawing.MainFrame.drawingPanel;
 
 public class SvgOutput extends JFrame {
     private static JTextArea textArea;
@@ -17,7 +21,7 @@ public class SvgOutput extends JFrame {
     public SvgOutput(DrawingPanel drawingPanel) {
         super("SVG editor");
         //this.drawingPanel = drawingPanel;
-        this.setSize(600, 800);
+        this.setSize(800, 800);
         setLocationRelativeTo(null);
 
         textArea = new JTextArea(20,30);
@@ -55,16 +59,29 @@ public class SvgOutput extends JFrame {
     //    <rect x="425" y="389" width="14" height="4" stroke="#000000" fill="none"/>
     //</svg>
 
-    public static void setText(String text) {
-        try {
-            original = textArea.getText();
-        } catch(NullPointerException e) {
-            if(Objects.equals(original, "")){
+    //Set text to textArea
+    public static void setText(String text, String type) {
+        //Decide whether to replace original string or append existing text
+        switch(type) {
+            case "inner":
+                try {
+                    original = textArea.getText();
+                } catch(NullPointerException e) {
+                    if(Objects.equals(original, "")){
+                        original = initialText;
+                    } else {
+                        original = output;
+                    }
+                }
+                break;
+            case "file":
                 original = initialText;
-            } else {
-                original = output;
-            }
+                break;
+            case "edit":
+                original = initialText;
+                break;
         }
+
         original = original.replace("</svg>", "");
         //original = original.replaceAll("(?m)^[ \t]*\r?\n", "");
         text = text.replace("<svg>", "");
@@ -79,7 +96,8 @@ public class SvgOutput extends JFrame {
         }
     }
 
-    public static void setFileText(String text) {
+    //Set text to textArea, usage for file loading to replace whatever is in textArea
+    /*public static void setFileText(String text) {
         original = initialText;
         original = original.replace("</svg>", "");
         text = text.replace("<svg>", "");
@@ -92,10 +110,77 @@ public class SvgOutput extends JFrame {
         } catch(NullPointerException e) {
             // Do nothing
         }
-    }
+    }*/
 
     public static String getOutput() {
         return output;
+    }
+
+    public static void updateShape(int shapeIndex, String newValues) {
+        String svgText = output;
+        Pattern pattern = Pattern.compile("<.*?/>");
+        Matcher matcher = pattern.matcher(svgText);
+
+        while (matcher.find()) {
+            String svgObject = matcher.group();
+            if (svgObject.contains("data-index=\"" + shapeIndex + "\"")) {
+                //System.out.println(svgObject);
+                //System.out.println("Vysledek: " + shapeUpdateHandler(svgObject, newValues));
+                String updatedSvgObject = shapeUpdateHandler(svgObject, newValues);
+                output = output.replace(svgObject, updatedSvgObject);
+                setText(output, "edit");
+                drawingPanel.loadFromSvg(output);
+                break;
+            }
+        }
+    }
+
+    public static String shapeUpdateHandler(String inputSvg, String newValues){
+        String result = "";
+        String[] words = inputSvg.split(" ");
+        String shapeType = words[0].replace("<", "");
+        String[] values = newValues.split(", ");
+        //System.out.println(shapeType);
+
+        switch(shapeType){
+            case "circle":
+                words[1] = "cx=\"" + values[3] + "\"";
+                words[2] = "cy=\"" + values[4] + "\"";
+                words[3] = "r=\"" + values[5] + "\"";
+                words[4] = "stroke=\"" + values[2] + "\"";
+                result = words[0] + " " + words[1] + " " + words[2] + " " + words[3] + " " + words[4] + " " + words[5] + " data-index=\"" + values[1] + "\"/>";
+                break;
+            case "rect":
+                words[1] = "x=\"" + values[3] + "\"";
+                words[2] = "y=\"" + values[4] + "\"";
+                words[3] = "width=\"" + values[5] + "\"";
+                words[4] = "height=\"" + values[6] + "\"";
+                words[5] = "stroke=\"" + values[2] + "\"";
+                result = words[0] + " " + words[1] + " " + words[2] + " " + words[3] + " " + words[4] + " " + words[5] + " " + words[6] + " data-index=\"" + values[1] + "\"/>";
+                break;
+            case "line":
+                words[1] = "x1=\"" + values[3] + "\"";
+                words[2] = "y1=\"" + values[4] + "\"";
+                words[3] = "x2=\"" + values[5] + "\"";
+                words[4] = "y2=\"" + values[6] + "\"";
+                words[5] = "stroke=\"" + values[2] + "\"";
+                result = words[0] + " " + words[1] + " " + words[2] + " " + words[3] + " " + words[4] + " " + words[5] + " data-index=\"" + values[1] + "\"/>";
+                break;
+            case "polygon":
+                words[1] = "points=\"" + values[3] + "," + values[6] + " " + values[4] + "," + values[7] + " " + values[5] + "," + values[8] + "\"";
+                words[2] = "stroke=\"" + values[2] + "\"";
+                result = words[0] + " " + words[1] + " " + words[2] + " " + words[5] + " data-index=\"" + values[1] + "\"/>";
+                break;
+            case "ellipse":
+                words[1] = "cx=\"" + values[3] + "\"";
+                words[2] = "cy=\"" + values[4] + "\"";
+                words[3] = "rx=\"" + values[5] + "\"";
+                words[4] = "ry=\"" + values[6] + "\"";
+                words[5] = "stroke=\"" + values[2] + "\"";
+                result = words[0] + " " + words[1] + " " + words[2] + " " + words[3] + " " + words[4] + " " + words[5] + " " + words[6] + " data-index=\"" + values[1] + "\"/>";
+                break;
+        }
+        return result;
     }
 
     public static void clear() {

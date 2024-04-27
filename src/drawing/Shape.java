@@ -16,4 +16,5 @@ public interface Shape {
     void setFilled(boolean isFilled);
     boolean isFilled();
     Color getColor();
+    void setColor(Color color);
 }

@@ -16,14 +16,20 @@ public class MainFrame extends JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLayout(new BorderLayout());
 
-        ShapesTablePanel shapesTablePanel = new ShapesTablePanel();
+        ShapeDetailsTablePanel shapeDetailsTablePanel = new ShapeDetailsTablePanel();
+        ShapesTablePanel shapesTablePanel = new ShapesTablePanel(shapeDetailsTablePanel);
         drawingPanel = new DrawingPanel(shapesTablePanel);
 
         drawingPanel.setBackground(Color.white);
         drawingPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 
+        JPanel eastPanel = new JPanel();
+        eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.PAGE_AXIS));
+        eastPanel.add(shapesTablePanel);
+        eastPanel.add(shapeDetailsTablePanel);
+
         this.add(drawingPanel, BorderLayout.CENTER);
-        this.add(shapesTablePanel, BorderLayout.EAST);
+        this.add(eastPanel, BorderLayout.EAST);
 
     }
 

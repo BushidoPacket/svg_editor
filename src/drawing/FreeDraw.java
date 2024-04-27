@@ -89,4 +89,8 @@ public class FreeDraw implements Shape {
         return points.toArray(new Point[0]);
     }
 
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
 }

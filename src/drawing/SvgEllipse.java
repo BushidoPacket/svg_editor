@@ -21,6 +21,8 @@ public class SvgEllipse {
 
     @XmlAttribute
     private String fill;
+    @XmlAttribute(name = "data-index")
+    private int dataIndex;
 
     // getters
 
@@ -46,5 +48,8 @@ public class SvgEllipse {
 
     public void setFill(String fill) {
         this.fill = fill;
+    }
+    public void setDataIndex(int dataIndex) {
+        this.dataIndex = dataIndex;
     }
 }

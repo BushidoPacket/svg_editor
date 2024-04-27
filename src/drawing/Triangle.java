@@ -71,4 +71,8 @@ public class Triangle implements Shape {
     public int getCenterY() {
         throw new UnsupportedOperationException("getCenterY operation is not supported by Triangle");
     }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
 }

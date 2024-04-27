@@ -7,8 +7,9 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+// Will generate SVG code based on patterns of shapes
 public class SvgGenerator {
-    public static void generateSvg(List<Shape> shapes) {
+    public static void generateSvg(List<Shape> shapes, int shapeIndex) {
         try {
             JAXBContext context = JAXBContext.newInstance(Svg.class);
             Marshaller marshaller = context.createMarshaller();
@@ -28,6 +29,7 @@ public class SvgGenerator {
                         svgRectangle.setHeight(rectangle.getEndY() - rectangle.getStartY());
                         svgRectangle.setStroke(colorHex);
                         svgRectangle.setFill(shape.isFilled() ? colorHex : "none");
+                        svgRectangle.setDataIndex(shapeIndex);
                         svg.setRectangle(svgRectangle);
                     }
                     case Ellipse ellipse -> {
@@ -38,6 +40,7 @@ public class SvgGenerator {
                         svgEllipse.setRy(ellipse.getRadiusY());
                         svgEllipse.setStroke(colorHex);
                         svgEllipse.setFill(shape.isFilled() ? colorHex : "none");
+                        svgEllipse.setDataIndex(shapeIndex);
                         svg.setEllipse(svgEllipse);
                     }
                     case Circle circle -> {
@@ -47,6 +50,7 @@ public class SvgGenerator {
                         svgCircle.setR(circle.getRadius());
                         svgCircle.setStroke(colorHex);
                         svgCircle.setFill(shape.isFilled() ? colorHex : "none");
+                        svgCircle.setDataIndex(shapeIndex);
                         svg.setCircle(svgCircle);
                     }
                     case Triangle triangle -> {
@@ -56,6 +60,7 @@ public class SvgGenerator {
                                 triangle.getXPoints()[2] + "," + triangle.getYPoints()[2]);
                         svgTriangle.setStroke(colorHex);
                         svgTriangle.setFill(shape.isFilled() ? colorHex : "none");
+                        svgTriangle.setDataIndex(shapeIndex);
                         svg.setTriangle(svgTriangle);
                     }
                     case Line line -> {
@@ -65,6 +70,7 @@ public class SvgGenerator {
                         svgLine.setX2(line.getEndX());
                         svgLine.setY2(line.getEndY());
                         svgLine.setStroke(colorHex);
+                        svgLine.setDataIndex(shapeIndex);
                         svg.setLine(svgLine);
                     }
                     case FreeDraw freeDraw -> {
@@ -91,7 +97,7 @@ public class SvgGenerator {
                 svgString = sw.toString();
 
             }
-            SvgOutput.setText(svgString);
+            SvgOutput.setText(svgString, "inner");
         } catch (Exception e) {
             System.out.println("Svg Generator error: " + e);
         }

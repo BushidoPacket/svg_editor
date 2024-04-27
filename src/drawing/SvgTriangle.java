@@ -13,6 +13,9 @@ public class SvgTriangle {
     @XmlAttribute
     private String fill;
 
+    @XmlAttribute(name = "data-index")
+    private int dataIndex;
+
     public void setPoints(String points) {
         this.points = points;
     }
@@ -23,5 +26,9 @@ public class SvgTriangle {
 
     public void setFill(String fill) {
         this.fill = fill;
+    }
+
+    public void setDataIndex(int dataIndex) {
+        this.dataIndex = dataIndex;
     }
 }

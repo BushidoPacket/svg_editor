@@ -22,6 +22,9 @@ public class SvgRectangle {
     @XmlAttribute
     private String fill;
 
+    @XmlAttribute(name = "data-index")
+    private int dataIndex;
+
 
     public void setX(int x) {
         this.x = x;
@@ -44,5 +47,8 @@ public class SvgRectangle {
 
     public void setFill(String fill) {
         this.fill = fill;
+    }
+    public void setDataIndex(int dataIndex) {
+        this.dataIndex = dataIndex;
     }
 }

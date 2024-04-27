@@ -19,6 +19,9 @@ public class SvgLine {
     @XmlAttribute
     private String stroke;
 
+    @XmlAttribute(name = "data-index")
+    private int dataIndex;
+
     public void setX1(int x1) {
         this.x1 = x1;
     }
@@ -57,5 +60,9 @@ public class SvgLine {
 
     public String getStroke() {
         return stroke;
+    }
+
+    public void setDataIndex(int dataIndex) {
+        this.dataIndex = dataIndex;
     }
 }

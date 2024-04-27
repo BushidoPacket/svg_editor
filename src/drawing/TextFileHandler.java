@@ -18,6 +18,7 @@ public class TextFileHandler {
         return content.toString();
     }
 
+    // Middle-ware function to save text to file
     public static void saveTextToFile(String filePath, String content) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write(content);
@@ -26,16 +27,18 @@ public class TextFileHandler {
         }
     }
 
+    // Load text file to SVG and DrawingPanel, DrawingPanel will also write values into table
     public static void loadTextFileToSvg(DrawingPanel drawingPanel, JFileChooser fileChooser) {
         int returnValue = fileChooser.showOpenDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             String content = loadTextFile(selectedFile.getPath());
-            SvgOutput.setFileText(content);
+            SvgOutput.setText(content, "file");
             drawingPanel.loadFromSvg(content);
         }
     }
 
+    // Save text from SVG to file
     public static void saveTextFileFromSvg(JFileChooser fileChooser) {
         int returnValue = fileChooser.showSaveDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {

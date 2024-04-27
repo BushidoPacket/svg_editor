@@ -23,13 +23,14 @@ public class DrawingPanel extends JPanel {
     private String shapeType = "none";
     private int initialX, initialY;
     private Color currentColor = Color.BLACK;
-
     private boolean isFilled = false;
+    private int shapeIndex = 0;
 
     public DrawingPanel(ShapesTablePanel shapesTablePanel) {
         this.shapesTablePanel = shapesTablePanel;
         setLayout(new BorderLayout());
 
+        // Toolbox creator and event listeners
         Toolbox toolbox = new Toolbox(
                 e -> shapeType = e.getActionCommand(),
                 e -> {
@@ -43,6 +44,7 @@ public class DrawingPanel extends JPanel {
         );
         add(toolbox.createToolbox(), BorderLayout.NORTH);
 
+        // M PRESSER
         addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 initialX = e.getX();
@@ -54,31 +56,32 @@ public class DrawingPanel extends JPanel {
                 }
                 if (shapeType.equals("Rectangle")) {
                     shapes.add(new Rectangle(e.getX(), e.getY(), e.getX(), e.getY(), currentColor, isFilled));
-                    shapesTablePanel.addShape("Rectangle", "x: " + e.getX() + ", y: " + e.getY(), colorHex);
+                    shapesTablePanel.addShape(shapeIndex++,"Rectangle", "x: " + e.getX() + ", y: " + e.getY(), colorHex);
                 }
                 if (shapeType.equals("Circle")) {
                     int radius = (int) Math.sqrt(Math.pow(e.getX() - e.getX(), 2) + Math.pow(e.getY() - e.getY(), 2));
                     shapes.add(new Circle(e.getX(), e.getY(), radius, currentColor, isFilled));
-                    shapesTablePanel.addShape("Circle", "centerX: " + e.getX() + ", centerY: " + e.getY() + ", radius: " + radius, colorHex);
+                    shapesTablePanel.addShape(shapeIndex++,"Circle", "centerX: " + e.getX() + ", centerY: " + e.getY() + ", radius: " + radius, colorHex);
                 }
                 if (shapeType.equals("Triangle")) {
                     int[] xPoints = {e.getX(), e.getX() + 50, e.getX() - 50};
                     int[] yPoints = {e.getY(), e.getY() + 50, e.getY() + 50};
                     shapes.add(new Triangle(xPoints, yPoints, currentColor, isFilled));
-                    shapesTablePanel.addShape("Triangle", "X: " + Arrays.toString(xPoints) + ", Y: " + Arrays.toString(yPoints), colorHex);
+                    shapesTablePanel.addShape(shapeIndex++,"Triangle", "X: " + Arrays.toString(xPoints) + ", Y: " + Arrays.toString(yPoints), colorHex);
                 }
                 if (shapeType.equals("Ellipse")) {
                     shapes.add(new Ellipse(e.getX(), e.getY(), 0, 0, currentColor, isFilled));
-                    shapesTablePanel.addShape("Ellipse", "centerX: " + e.getX() + ", centerY: " + e.getY() + ", radiusX: 0, radiusY: 0", colorHex);
+                    shapesTablePanel.addShape(shapeIndex++,"Ellipse", "centerX: " + e.getX() + ", centerY: " + e.getY() + ", radX: 0, radY: 0", colorHex);
                 }
                 if (shapeType.equals("Line")) {
                     shapes.add(new Line(e.getX(), e.getY(), e.getX(), e.getY(), currentColor));
-                    shapesTablePanel.addShape("Line", "startX: " + e.getX() + ", startY: " + e.getY(), colorHex);
+                    shapesTablePanel.addShape(shapeIndex++,"Line", "startX: " + e.getX() + ", startY: " + e.getY(), colorHex);
                 }
                 repaint();
             }
         });
 
+        // M DRAGGER
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
                 int lastIndex = shapesTablePanel.getTable().getRowCount() - 1;
@@ -122,7 +125,7 @@ public class DrawingPanel extends JPanel {
                     lastEllipse.setRadiusX(Math.abs(e.getX() - lastEllipse.getCenterX()));
                     lastEllipse.setRadiusY(Math.abs(e.getY() - lastEllipse.getCenterY()));
                     if (shapes.get(shapes.size() - 1) instanceof Ellipse) {
-                        shapesTablePanel.updateShape(lastIndex, "Ellipse", "centerX: " + lastEllipse.getCenterX() + ", centerY: " + lastEllipse.getCenterY() + ", radiusX: " + lastEllipse.getRadiusX() + ", radiusY: " + lastEllipse.getRadiusY(), colorHex);
+                        shapesTablePanel.updateShape(lastIndex, "Ellipse", "centerX: " + lastEllipse.getCenterX() + ", centerY: " + lastEllipse.getCenterY() + ", radX: " + lastEllipse.getRadiusX() + ", radY: " + lastEllipse.getRadiusY(), colorHex);
                     }
                 }
                 if (shapeType.equals("Line")) {
@@ -136,6 +139,7 @@ public class DrawingPanel extends JPanel {
             }
         });
 
+        // M RELEASER
         addMouseListener(new MouseAdapter() {
             public void mouseReleased(MouseEvent e){
                 int lastIndex = shapesTablePanel.getTable().getRowCount() - 1;
@@ -169,7 +173,7 @@ public class DrawingPanel extends JPanel {
                 if (shapeType.equals("Ellipse")) {
                     Ellipse lastEllipse = (Ellipse) shapes.get(shapes.size() - 1);
                     if(shapes.get(shapes.size() - 1) instanceof Ellipse) {
-                        shapesTablePanel.updateShape(lastIndex, "Ellipse", "centerX: " + lastEllipse.getCenterX() + ", centerY: " + lastEllipse.getCenterY() + ", radiusX: " + lastEllipse.getRadiusX() + ", radiusY: " + lastEllipse.getRadiusY(), colorHex);
+                        shapesTablePanel.updateShape(lastIndex, "Ellipse", "centerX: " + lastEllipse.getCenterX() + ", centerY: " + lastEllipse.getCenterY() + ", radX: " + lastEllipse.getRadiusX() + ", radY: " + lastEllipse.getRadiusY(), colorHex);
                     }
                 }
                 if (shapeType.equals("Line")) {
@@ -181,12 +185,14 @@ public class DrawingPanel extends JPanel {
                 }
                 //shapeType = "none";
                 repaint();
-                SvgGenerator.generateSvg(shapes);
+                SvgGenerator.generateSvg(shapes, shapeIndex-1);
             }
         });
     }
 
+    // Load shapes from SVG code and display them as drawing + in table
     public void loadFromSvg(String svgCode) {
+        shapeIndex = 0;
         shapes.clear();
         shapesTablePanel.clear();
 
@@ -210,7 +216,7 @@ public class DrawingPanel extends JPanel {
                         Color color = Color.decode(element.getAttribute("stroke"));
                         boolean isFilled = !element.getAttribute("fill").equals("none");
                         shapes.add(new Rectangle(x, y, x + width, y + height, color, isFilled));
-                        shapesTablePanel.addShape("Rectangle", "x: " + x + ", y: " + y + ", width: " + width + ", height: " + height, "#" + Integer.toHexString(color.getRGB()).substring(2));
+                        shapesTablePanel.addShape(shapeIndex++,"Rectangle", "x: " + x + ", y: " + y + ", width: " + width + ", height: " + height, "#" + Integer.toHexString(color.getRGB()).substring(2));
                         break;
                     case "circle":
                         int centerX = Integer.parseInt(element.getAttribute("cx"));
@@ -219,7 +225,7 @@ public class DrawingPanel extends JPanel {
                         Color circleColor = Color.decode(element.getAttribute("stroke"));
                         boolean circleIsFilled = !element.getAttribute("fill").equals("none");
                         shapes.add(new Circle(centerX, centerY, radius, circleColor, circleIsFilled));
-                        shapesTablePanel.addShape("Circle", "centerX: " + centerX + ", centerY: " + centerY + ", rad: " + radius, "#" + Integer.toHexString(circleColor.getRGB()).substring(2));
+                        shapesTablePanel.addShape(shapeIndex++,"Circle", "centerX: " + centerX + ", centerY: " + centerY + ", rad: " + radius, "#" + Integer.toHexString(circleColor.getRGB()).substring(2));
                         break;
                     case "polygon":
                         String points = element.getAttribute("points");
@@ -234,7 +240,7 @@ public class DrawingPanel extends JPanel {
                         Color triangleColor = Color.decode(element.getAttribute("stroke"));
                         boolean triangleIsFilled = !element.getAttribute("fill").equals("none");
                         shapes.add(new Triangle(xPoints, yPoints, triangleColor, triangleIsFilled));
-                        shapesTablePanel.addShape("Triangle", "X: " + Arrays.toString(xPoints) + ", Y: " + Arrays.toString(yPoints), "#" + Integer.toHexString(triangleColor.getRGB()).substring(2));
+                        shapesTablePanel.addShape(shapeIndex++,"Triangle", "X: " + Arrays.toString(xPoints) + ", Y: " + Arrays.toString(yPoints), "#" + Integer.toHexString(triangleColor.getRGB()).substring(2));
                         break;
                     case "ellipse":
                         int ellipseCenterX = Integer.parseInt(element.getAttribute("cx"));
@@ -244,7 +250,7 @@ public class DrawingPanel extends JPanel {
                         Color ellipseColor = Color.decode(element.getAttribute("stroke"));
                         boolean ellipseIsFilled = !element.getAttribute("fill").equals("none");
                         shapes.add(new Ellipse(ellipseCenterX, ellipseCenterY, radiusX, radiusY, ellipseColor, ellipseIsFilled));
-                        shapesTablePanel.addShape("Ellipse", "centerX: " + ellipseCenterX + ", centerY: " + ellipseCenterY + ", radX: " + radiusX + ", radY: " + radiusY, "#" + Integer.toHexString(ellipseColor.getRGB()).substring(2));
+                        shapesTablePanel.addShape(shapeIndex++,"Ellipse", "centerX: " + ellipseCenterX + ", centerY: " + ellipseCenterY + ", radX: " + radiusX + ", radY: " + radiusY, "#" + Integer.toHexString(ellipseColor.getRGB()).substring(2));
                         break;
                 }
             }
@@ -255,6 +261,7 @@ public class DrawingPanel extends JPanel {
         repaint();
     }
 
+    // Clear all shapes from the drawing, SVG and the table
     public void clear() {
         shapes.clear();
         shapesTablePanel.clear();
