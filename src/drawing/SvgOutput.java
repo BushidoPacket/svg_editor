@@ -3,7 +3,8 @@ package drawing;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.util.Objects;
+import java.util.*;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.google.gson.Gson;
@@ -190,7 +191,51 @@ public class SvgOutput extends JFrame {
 
     public static String svgStringToJson(String svgString) {
         Gson gson = new Gson();
-        return gson.toJson(svgString);
+        Map<String, Object> svgMap = new HashMap<>();
+        Map<String, Map<String, String>> shapesMap = new HashMap<>();
+
+        Pattern pattern = Pattern.compile("<(.*?) (.*?)/>");
+        Matcher matcher = pattern.matcher(svgString);
+
+        while (matcher.find()) {
+            String shapeType = matcher.group(1).trim();
+            String shapeAttributes = matcher.group(2);
+
+            Map<String, String> shapeMap = new LinkedHashMap<>();
+            Map<String, String> tempMap = new HashMap<>();
+
+            Pattern attrPattern = Pattern.compile("(.*?)=\"(.*?)\"");
+            Matcher attrMatcher = attrPattern.matcher(shapeAttributes);
+
+            while (attrMatcher.find()) {
+                String attrName = attrMatcher.group(1).trim();
+                String attrValue = attrMatcher.group(2).trim();
+                tempMap.put(attrName, attrValue);
+            }
+
+            for (Map.Entry<String, String> entry : tempMap.entrySet()) {
+                if (!entry.getKey().equals("stroke") && !entry.getKey().equals("fill") && !entry.getKey().equals("data-index")) {
+                    shapeMap.put(entry.getKey(), entry.getValue());
+                }
+            }
+
+            if (tempMap.containsKey("stroke")) {
+                shapeMap.put("stroke", tempMap.get("stroke"));
+            }
+
+            if (tempMap.containsKey("fill")) {
+                shapeMap.put("fill", tempMap.get("fill"));
+            }
+
+            if (tempMap.containsKey("data-index")) {
+                shapeMap.put("data-index", tempMap.get("data-index"));
+            }
+
+            shapesMap.put(shapeType, shapeMap);
+        }
+
+        svgMap.put("shapes", shapesMap);
+        return gson.toJson(svgMap);
     }
 
     public static void clear() {
