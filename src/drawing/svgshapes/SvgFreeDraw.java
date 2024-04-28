@@ -9,8 +9,6 @@ public class SvgFreeDraw {
     @XmlElement(name = "path")
     private SvgCircle[] circles;
 
-    // getters and setters
-
     public void setCircles(SvgCircle[] circles) {
         this.circles = circles;
     }

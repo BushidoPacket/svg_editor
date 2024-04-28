@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import com.google.gson.Gson;
 
 import static drawing.MainFrame.drawingPanel;
 
@@ -34,20 +35,24 @@ public class SvgOutput extends JFrame {
             textArea.setText(initialText);
         }
 
-        JButton update = new JButton("Load image from SVG");
+        JButton update = new JButton("Load image from text");
         update.addActionListener(e -> drawingPanel.loadFromSvg(textArea.getText()));
 
-        JButton loadButton = new JButton("Load text file");
+        JButton loadButton = new JButton("Load text/XML file");
         loadButton.addActionListener(e -> TextFileHandler.loadTextFileToSvg(drawingPanel, new JFileChooser()));
 
 
-        JButton saveButton = new JButton("Save text to file");
+        JButton saveButton = new JButton("Save text to text/XML file");
         saveButton.addActionListener(e -> TextFileHandler.saveTextFileFromSvg(new JFileChooser()));
+
+        JButton saveButtonJSON = new JButton("Save text to JSON file");
+        saveButtonJSON.addActionListener(e -> TextFileHandler.saveJSON(new JFileChooser()));
 
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(loadButton);
         buttonPanel.add(saveButton);
+        buttonPanel.add(saveButtonJSON);
         buttonPanel.add(update);
 
         add(buttonPanel, BorderLayout.NORTH);
@@ -181,6 +186,12 @@ public class SvgOutput extends JFrame {
                 break;
         }
         return result;
+    }
+
+    public static String svgStringToJson(String svgString) {
+        System.out.println("1");
+        Gson gson = new Gson();
+        return gson.toJson(svgString);
     }
 
     public static void clear() {

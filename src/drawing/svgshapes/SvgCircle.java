@@ -22,8 +22,6 @@ public class SvgCircle {
     @XmlAttribute(name = "data-index")
     private int dataIndex;
 
-    // getters and setters
-
     public void setCx(int cx) {
         this.cx = cx;
     }

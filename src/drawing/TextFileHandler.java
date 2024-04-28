@@ -1,4 +1,6 @@
 package drawing;
+import com.google.gson.Gson;
+
 import javax.swing.*;
 import java.io.*;
 
@@ -47,4 +49,16 @@ public class TextFileHandler {
             saveTextToFile(selectedFile.getPath(), content);
         }
     }
+
+    public static void saveJSON(JFileChooser fileChooser) {
+        System.out.println("2");
+        int returnValue = fileChooser.showSaveDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            String svgString = SvgOutput.getOutput(); // your SVG string
+            String json = SvgOutput.svgStringToJson(svgString);
+            saveTextToFile(selectedFile.getPath(), json);
+        }
+    }
+
 }

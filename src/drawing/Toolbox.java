@@ -123,13 +123,17 @@ public class Toolbox {
         JMenu fileMenu = new JMenu("File");
         fileMenu.setForeground(Color.yellow);
 
-        JMenuItem openF = new JMenuItem("Open file...");
+        JMenuItem openF = new JMenuItem("Open text/XML file");
         openF.addActionListener(e -> TextFileHandler.loadTextFileToSvg(drawingPanel, new JFileChooser()));
         fileMenu.add(openF);
 
-        JMenuItem saveF = new JMenuItem("Save file...");
+        JMenuItem saveF = new JMenuItem("Save file as text/XML");
         saveF.addActionListener(e -> TextFileHandler.saveTextFileFromSvg(new JFileChooser()));
         fileMenu.add(saveF);
+
+        JMenuItem saveFJSON = new JMenuItem("Save file JSON");
+        saveFJSON.addActionListener(e -> TextFileHandler.saveJSON(new JFileChooser()));
+        fileMenu.add(saveFJSON);
 
         JMenuItem btnSVG = new JMenuItem("SVG editor");
         btnSVG.addActionListener(svgButtonListener);

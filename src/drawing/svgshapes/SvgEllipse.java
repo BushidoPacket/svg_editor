@@ -24,8 +24,6 @@ public class SvgEllipse {
     @XmlAttribute(name = "data-index")
     private int dataIndex;
 
-    // getters
-
     public void setCx(int cx) {
         this.cx = cx;
     }
