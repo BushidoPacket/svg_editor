@@ -189,7 +189,6 @@ public class SvgOutput extends JFrame {
     }
 
     public static String svgStringToJson(String svgString) {
-        System.out.println("1");
         Gson gson = new Gson();
         return gson.toJson(svgString);
     }

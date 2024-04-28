@@ -51,7 +51,6 @@ public class TextFileHandler {
     }
 
     public static void saveJSON(JFileChooser fileChooser) {
-        System.out.println("2");
         int returnValue = fileChooser.showSaveDialog(null);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
