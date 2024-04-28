@@ -192,7 +192,7 @@ public class SvgOutput extends JFrame {
     public static String svgStringToJson(String svgString) {
         Gson gson = new Gson();
         Map<String, Object> svgMap = new HashMap<>();
-        Map<String, Map<String, String>> shapesMap = new HashMap<>();
+        Map<String, List<Map<String, String>>> shapesMap = new HashMap<>();
 
         Pattern pattern = Pattern.compile("<(.*?) (.*?)/>");
         Matcher matcher = pattern.matcher(svgString);
@@ -231,7 +231,8 @@ public class SvgOutput extends JFrame {
                 shapeMap.put("data-index", tempMap.get("data-index"));
             }
 
-            shapesMap.put(shapeType, shapeMap);
+            shapesMap.putIfAbsent(shapeType, new ArrayList<>());
+            shapesMap.get(shapeType).add(shapeMap);
         }
 
         svgMap.put("shapes", shapesMap);
